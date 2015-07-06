@@ -177,11 +177,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\db.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\mysqldatabase.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\source.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\sqlite3.c"
+				>
+			</File>
+			<File
+				RelativePath=".\sqlitedatabase.cpp"
 				>
 			</File>
 		</Filter>
@@ -192,6 +204,14 @@
 			>
 			<File
 				RelativePath=".\db.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sqlite3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sqlite3ext.h"
 				>
 			</File>
 		</Filter>

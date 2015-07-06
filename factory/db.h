@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <mysql.h>
+#include "sqlite3.h"
 using namespace std;
 
 class DBUtil
@@ -57,6 +58,21 @@ public:
 	virtual void executeQuery();
 	virtual void executeUpdate();
 	virtual void closeConn();
+};
+
+//²Ù×÷sqlite
+class SQLiteUtil:public DBUtil
+{
+public:
+	~SQLiteUtil();
+	virtual void conn();
+	virtual void open(string userName,string pass,string database);
+	virtual void executeQuery();
+	virtual void executeUpdate();
+	virtual void closeConn();
+	static int	callback(void *notUsed, int argc, char **argv, char **szColName);
+private:
+	sqlite3 *m_pDB;
 };
 
 /***

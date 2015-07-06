@@ -2,9 +2,9 @@
 
 int main()
 {
-	DBUtil *myConn = DBFactory<MySQLUtil>::getDBInstance();
+	DBUtil *myConn = DBFactory<SQLiteUtil>::getDBInstance();
 	myConn->conn();
-	myConn->open("root","","mytest");
+	myConn->open("","","mytest");
 	myConn->executeQuery();
 	myConn->executeUpdate();
 	//myConn->closeConn();
