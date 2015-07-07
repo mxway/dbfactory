@@ -89,7 +89,7 @@ template<class T>
 class DBFactory
 {
 public:
-	static SmartPtr<DBUtil> *getDBInstance();
+	static SmartPtr<DBUtil> getDBInstance();
 };
 
 template<class T>
