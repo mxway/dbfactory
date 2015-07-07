@@ -2,7 +2,7 @@
 
 int main()
 {
-	DBUtil *myConn = DBFactory<SQLiteUtil>::getDBInstance();
+	SmartPtr<DBUtil> myConn = DBFactory<SQLiteUtil>::getDBInstance();
 	myConn->conn();
 	myConn->open("","","mytest");
 	myConn->executeQuery();

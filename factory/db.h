@@ -1,8 +1,12 @@
+#ifndef DB_INCLUDE_H
+#define DB_INCLUDE_H
 #include <iostream>
 #include <string>
 #include <mysql.h>
 #include "sqlite3.h"
+#include "smartptr.h"
 using namespace std;
+using namespace commutil;
 
 class DBUtil
 {
@@ -85,11 +89,14 @@ template<class T>
 class DBFactory
 {
 public:
-	static T *getDBInstance();
+	static SmartPtr<DBUtil> *getDBInstance();
 };
 
 template<class T>
-T *DBFactory<T>::getDBInstance()
+SmartPtr<DBUtil> DBFactory<T>::getDBInstance()
 {
-	return new T();
+	SmartPtr<DBUtil> db(new T());
+	return db;
+	//return new T();
 }
+#endif
