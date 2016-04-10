@@ -1,3 +1,4 @@
+#ifdef USE_MYSQL_DATABASE
 #include "db.h"
 #include "mysql.h"
 #include <iostream>
@@ -5,7 +6,7 @@
 #pragma warning(disable:4996)
 using namespace std;
 
-#ifdef USE_MYSQL_DATABASE
+
 
 int MySQLUtil::conn()
 {
