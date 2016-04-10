@@ -2,11 +2,12 @@
 #define DB_INCLUDE_H
 #include <iostream>
 #include <string>
-
+#define MXL_MSSQL
 #ifdef MXL_MYSQL
 	#define USE_MYSQL_DATABASE
 #elif defined MXL_MSSQL
 	#define USE_MSSQL_DATABASE
+#import "c:\Program Files\Common Files\System\ado\msado15.dll" no_namespace rename("EOF", "adoEOF") rename("BOF","adoBOF") 
 #elif defined MXL_ORACLE
 	#define USE_ORACLE_DATABASE
 #else
@@ -137,11 +138,34 @@ private:
 class MsSQLUtil:public DBUtil
 {
 public:
+	~MsSQLUtil();
 	virtual int conn();
 	virtual int open(string database,string host="",string userName="",string pass="");
 	virtual SmartPtr<CQuerySet> executeQuery(string sql);
 	virtual void executeUpdate(string sql);
 	virtual void closeConn();
+protected:
+	_ConnectionPtr m_connPtr;
+};
+class CMsSQLQuerySet:public CQuerySet
+{
+public:
+	CMsSQLQuerySet(_RecordsetPtr p=NULL);
+	~CMsSQLQuerySet();
+	virtual bool hasNext();
+	virtual void moveFirst();
+	virtual void movePrev();
+	virtual void moveLast();
+	virtual void moveNext();
+
+	virtual int  getInt(string colName);
+	virtual double  getDouble(string colName);
+	virtual string  getString(string colName);
+	virtual int   getInt(unsigned int index);
+	virtual double getDouble(unsigned int index);
+	virtual string getString(unsigned int index);
+protected:
+	_RecordsetPtr m_recordPtr;
 };
 #endif
 

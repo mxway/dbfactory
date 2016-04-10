@@ -1,13 +1,14 @@
 #include "db.h"
 
-void MsSQLUtil::conn()
+int MsSQLUtil::conn()
 {
 	::CoInitialize(NULL);
 	m_connPtr.CreateInstance(__uuidof(Connection));
+	return 0;
 	//m_recordPtr.CreateInstance(__uuidof(Recordset));
 }
 
-void MsSQLUtil::open(string userName,string pass,string database)
+int MsSQLUtil::open(string database,string host,string userName,string pass)
 {
 	_bstr_t	strConnection="Driver={sql server};server=localhost,1434;uid=";
 	strConnection += userName.c_str();
@@ -23,12 +24,17 @@ void MsSQLUtil::open(string userName,string pass,string database)
 	catch(_com_error &e)
 	{
 		cout<<e.Description()<<endl;
+		return -1;
 	}
+	return 0;
 }
 
-void MsSQLUtil::executeQuery()
+SmartPtr<CQuerySet> MsSQLUtil::executeQuery(string sql)
 {
-	_bstr_t strSql = "select id,name from userinfo;";
+	_RecordsetPtr rsp = m_connPtr->Execute(sql.c_str(),NULL,adCmdText);
+	CMsSQLQuerySet *qs = new CMsSQLQuerySet(rsp);
+	return qs;
+	/*_bstr_t strSql = "select id,name from userinfo;";
 	m_recordPtr = m_connPtr->Execute(strSql,NULL,adCmdText);
 	m_recordPtr->MoveFirst();
 	for(int i=0; i<m_recordPtr->GetFields()->GetCount(); i++)
@@ -49,10 +55,11 @@ void MsSQLUtil::executeQuery()
 		}
 		cout<<endl;
 		m_recordPtr->MoveNext();
-	}
+	}*/
+	//return NULL;
 }
 
-void MsSQLUtil::executeUpdate()
+void MsSQLUtil::executeUpdate(string sql)
 {
 
 }
@@ -68,4 +75,73 @@ MsSQLUtil::~MsSQLUtil()
 	m_connPtr->Close();
 	::CoUninitialize();
 
+}
+
+CMsSQLQuerySet::CMsSQLQuerySet(_RecordsetPtr p):m_recordPtr(p)
+{
+
+}
+
+CMsSQLQuerySet::~CMsSQLQuerySet()
+{
+	if(m_recordPtr)
+	{
+		m_recordPtr->Close();
+	}
+}
+
+bool CMsSQLQuerySet::hasNext()
+{
+	return !m_recordPtr->adoEOF;
+}
+
+void CMsSQLQuerySet::moveFirst()
+{
+	m_recordPtr->MoveFirst();
+}
+
+void CMsSQLQuerySet::movePrev()
+{
+	m_recordPtr->MovePrevious();
+}
+
+void CMsSQLQuerySet::moveNext()
+{
+	cout<<m_recordPtr->GetAbsolutePosition()<<endl;
+	m_recordPtr->MoveNext();
+}
+
+void CMsSQLQuerySet::moveLast()
+{
+	m_recordPtr->MoveLast();
+}
+
+int CMsSQLQuerySet::getInt(unsigned int index)
+{
+	return atoi((char*)(_bstr_t)m_recordPtr->GetCollect((LONG)index));
+}
+
+double CMsSQLQuerySet::getDouble(unsigned int index)
+{
+	return atof((char*)(_bstr_t)m_recordPtr->GetCollect((LONG)index));
+}
+
+string CMsSQLQuerySet::getString(unsigned int index)
+{
+	return (char*)(_bstr_t)m_recordPtr->GetCollect((LONG)index);
+}
+
+int CMsSQLQuerySet::getInt(string colName)
+{
+	return atoi((char*)(_bstr_t)m_recordPtr->GetCollect(colName.c_str()));
+}
+
+double CMsSQLQuerySet::getDouble(string colName)
+{
+	return atof((char*)(_bstr_t)m_recordPtr->GetCollect(colName.c_str()));
+}
+
+string CMsSQLQuerySet::getString(string colName)
+{
+	return (char*)(_bstr_t)m_recordPtr->GetCollect(colName.c_str());
 }
